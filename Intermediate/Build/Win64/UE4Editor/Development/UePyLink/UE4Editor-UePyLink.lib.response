@@ -1,0 +1,14 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-UePyLink.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\UnrealEngine\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Intermediate\Build\Win64\UE4Editor\Development\UePyLink\Module.UePyLink.cpp.obj"
+"C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Intermediate\Build\Win64\UE4Editor\Development\UePyLink\Module.UePyLink.gen.cpp.obj"
+"C:\UnrealEngine\Engine\Intermediate\Build\Win64\UE4Editor\Development\Default.rc2.res"
+/OUT:"C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Intermediate\Build\Win64\UE4Editor\Development\UePyLink\UE4Editor-UePyLink.lib"
+/INCLUDE:IMPLEMENT_MODULE_UePyLink

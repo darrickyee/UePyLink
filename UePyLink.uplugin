@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "0.1",
+	"FriendlyName": "UePyLink",
+	"Description": "A custom GameModeBase class enabling runtime communication between Python and Unreal Engine.",
+	"Category": "Scripting",
+	"CreatedBy": "",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "UePyLink",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

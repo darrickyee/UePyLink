@@ -1,0 +1,14 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.UePyLink.cpp.obj": [
+			"PyLink.cpp.obj",
+			"PyLinkGameMode.cpp.obj",
+			"UePyLink.cpp.obj"
+		],
+		"Module.UePyLink.gen.cpp.obj": [
+			"PyLinkGameMode.gen.cpp.obj",
+			"UePyLink.init.gen.cpp.obj"
+		]
+	}
+}

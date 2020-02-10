@@ -1,0 +1,2 @@
+C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Intermediate\Build\Win64\UE4Editor\Development\UePyLink\Definitions.UePyLink.h
+C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Source\UePyLink\Public\UePyLink.h
