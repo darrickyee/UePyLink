@@ -15,25 +15,24 @@ class UEPYLINK_API APyLinkGameMode : public AGameModeBase
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FString &, Name, const FString &, Data);
 
-	UPROPERTY(BlueprintAssignable)
-		FPyBroadcast OnPyBroadcast;
+	UPROPERTY(BlueprintAssignable, Category = "PyLink")
+	FPyBroadcast OnPyBroadcast;
 
-	UFUNCTION(BlueprintCallable)
-		FString CallPython(const FString &Function, const FString &Data);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString ModuleName;
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	FString CallPython(const FString &Function, const FString &Arg);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FString ModulePath;
+	FString ModuleName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString ModulePath;
 
 	virtual void BeginPlay() override;
-	//virtual void EndPlay(EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	PyObject *pModule;
 	CPyInstance pInstance;
 
 	void _broadcast(const FString &Name, const FString &Data);
-	
+	void _setpaths();
 };

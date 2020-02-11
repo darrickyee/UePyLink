@@ -6,19 +6,22 @@
 #include "Runtime/Core/Public/Misc/Paths.h"
 #include <string>
 
-
-PyMODINIT_FUNC
-PyInit_ue_pylink(void)
-{
-	return PyModule_Create(&moddef);
-}
-
 void APyLinkGameMode::_broadcast(const FString &Name, const FString &Data)
 {
 	OnPyBroadcast.Broadcast(Name, Data);
 }
 
-FString APyLinkGameMode::CallPython(const FString &Function, const FString &Data)
+void APyLinkGameMode::_setpaths()
+{
+	// const FString pluginbasedir = IPluginManager::Get().FindPlugin(TEXT("UePyLink"))->GetBaseDir();
+	/*
+	Needs type conversion
+	Py_SetProgramName(_convert to wchar_t_ pluginbasedir + L"/Binaries/Win64/Python/python.exe");
+	Py_SetPath(-add python zip path or home path- -add game Content/Scripts);
+	*/
+}
+
+FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 {
 	FString returnVal = TEXT("");
 
@@ -28,15 +31,17 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Data
 
 		if (pFunc && PyCallable_Check(pFunc))
 		{
-			PyObject *pArg = PyTuple_New(1);
-			PyTuple_SetItem(pArg, 0, PyUnicode_FromString(TCHAR_TO_UTF8(*Data)));
-			PyObject *pReturn = PyObject_CallObject(pFunc, pArg);
+			PyObject *pReturn = PyObject_CallFunctionObjArgs(pFunc, PyUnicode_FromString(Arg.c_str()), NULL);
 
 			if (pReturn)
 			{
 				returnVal = FString(PyUnicode_AsUTF8(PyObject_Str(pReturn)));
 			}
 		}
+	}
+	else
+	{
+		printf("Error: No module loaded.");
 	}
 
 	return returnVal;
@@ -46,24 +51,12 @@ void APyLinkGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (*ModuleName && !pModule)
+	if (*ModuleName && !Py_IsInitialized())
 	{
+		// Need to set paths somewhere
 		OnPyCall.BindUObject(this, &APyLinkGameMode::_broadcast);
 
-		PyImport_AppendInittab("ue_pylink", &PyInit_ue_pylink);
-
-		std::string _modpath = TCHAR_TO_UTF8(*(FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir()) + TEXT("/Scripts")));
-		if (!ModulePath.IsEmpty())
-		{
-			_modpath += TCHAR_TO_UTF8(*ModulePath);
-		}
-		std::string pyPathCmd = "sys.path.append('" + _modpath + "')\n";
-		pInstance.Init();
-
-		PyRun_SimpleString("import sys\n");
-		PyRun_SimpleString(pyPathCmd.c_str());
-
-		pModule = PyImport_ImportModule(TCHAR_TO_UTF8(*ModuleName));
-		// GEngine->AddOnScreenDebugMessage(-10, 5.f, FColor::Red, FString(PyUnicode_AsUTF8(PyObject_Str(pModule))));
+		// Need to convert ModuleName to string
+		pModule = pInstance.StartPython(string(TCHAR_TO_UTF8(*ModuleName)));
 	};
 }

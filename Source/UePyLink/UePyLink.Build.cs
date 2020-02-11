@@ -4,52 +4,54 @@ using UnrealBuildTool;
 
 public class UePyLink : ModuleRules
 {
-	public UePyLink(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+    public UePyLink(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+
+        string PythonDir = System.IO.Path.Combine(ModuleDirectory, "..", "ThirdParty", "Python");
 
         PublicIncludePaths.AddRange(
             new string[] {
 				// ... add public include paths required here ...
-                "C:\\Program Files\\Python37"
+                System.IO.Path.Combine(PythonDir, "include")
             }
             );
 
-        PublicLibraryPaths.Add("C:\\Program Files\\Python37\\libs");
+        PublicLibraryPaths.Add(System.IO.Path.Combine(PythonDir, "libs"));
 
         PrivateIncludePaths.AddRange(
-			new string[] {
+            new string[] {
 				// ... add other private include paths required here ...
 			}
-			);
-			
-		
-		PublicDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"Core",
+            );
+
+
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "Core",
 				// ... add other public dependencies that you statically link with here ...
 			}
-			);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
+            );
+
+
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
 				// ... add private dependencies that you statically link with here ...	
 			}
-			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
-			new string[]
-			{
+            );
+
+
+        DynamicallyLoadedModuleNames.AddRange(
+            new string[]
+            {
 				// ... add any modules that your module loads dynamically here ...
 			}
-			);
-	}
+            );
+    }
 }
