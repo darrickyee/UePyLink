@@ -1,10 +1,7 @@
 #include "PyLink.h"
 #if DEV
-#include <Python.h>
-
 #else
 #include "CoreMinimal.h"
-#include <include/Python.h>
 
 #endif
 
@@ -14,7 +11,7 @@ PyInit_ue_pylink(void)
 	return PyModule_Create(&moddef);
 }
 
-CPyInstance::CPyInstance() : ModuleName{""}, pModule{0}
+CPyInstance::CPyInstance() : pModule{0}, ModuleName{""}
 {
 }
 

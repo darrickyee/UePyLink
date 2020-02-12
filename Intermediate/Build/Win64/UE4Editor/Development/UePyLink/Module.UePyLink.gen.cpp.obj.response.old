@@ -231,6 +231,7 @@
 /I Runtime\AudioMixerCore\Public
 /I "C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Intermediate\Build\Win64\UE4Editor\Inc\UePyLink"
 /I "C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Source"
+/I "C:\Program Files\Python37"
 /I "C:\Users\Darrick\Documents\Unreal Projects\Proj424\Plugins\UePyLink\Source\UePyLink\Public"
 /I ThirdParty\PhysX3\PxShared\include
 /I ThirdParty\PhysX3\PxShared\include\cudamanager

@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "CoreMinimal.h"
 #include "PyLink.h"
+#include "Interfaces/IPluginManager.h"
+#include "Misc/Paths.h"
 #include "GameFramework/GameModeBase.h"
 #include "PyLinkGameMode.generated.h"
 
@@ -21,11 +23,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	FString CallPython(const FString &Function, const FString &Arg);
 
+	// Name of Python module to load.  E.g., 'mymodule'
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString ModuleName;
 
+	// Path to module, relative to Content directory.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString ModulePath;
+	FString ModulePath = FString(TEXT("Scripts"));
 
 	virtual void BeginPlay() override;
 

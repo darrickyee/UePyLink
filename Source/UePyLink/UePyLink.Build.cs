@@ -43,6 +43,7 @@ public class UePyLink : ModuleRules
                 "Slate",
                 "SlateCore",
 				// ... add private dependencies that you statically link with here ...	
+                "Projects" // Required for IPluginManager
 			}
             );
 

@@ -25,7 +25,7 @@ void EmptyLinkFunctionForGeneratedCodeUePyLink_init() {}
 				SingletonFuncArray,
 				UE_ARRAY_COUNT(SingletonFuncArray),
 				PKG_CompiledIn | 0x00000000,
-				0x7BF8EFC1,
+				0x7BBC8FC0,
 				0xB2340E83,
 				METADATA_PARAMS(nullptr, 0)
 			};

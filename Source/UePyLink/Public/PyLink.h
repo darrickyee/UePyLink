@@ -1,7 +1,8 @@
-#define DEV 1
+#define DEV 0
 
 #ifndef _UEPYLINK_INIT
 #define _UEPYLINK_INIT
+#include <Python.h>
 #include <string>
 
 using namespace std;
@@ -25,7 +26,6 @@ static PyObject *ue_pylink_broadcast(PyObject *self, PyObject *pArgs)
 
 #else
 #include "CoreMinimal.h"
-#include <include/Python.h>
 
 DECLARE_DELEGATE_TwoParams(FPyCall, const FString &, const FString &);
 
@@ -63,7 +63,6 @@ public:
 	~CPyInstance();
 
 	PyObject *StartPython(string module_name = "");
-
 
 private:
 	PyObject *pModule;

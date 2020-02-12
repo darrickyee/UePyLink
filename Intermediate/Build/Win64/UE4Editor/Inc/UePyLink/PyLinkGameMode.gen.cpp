@@ -85,14 +85,14 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 		struct PyLinkGameMode_eventCallPython_Parms
 		{
 			FString Function;
-			FString Data;
+			FString Arg;
 			FString ReturnValue;
 		};
 		static const UE4CodeGen_Private::FStrPropertyParams NewProp_ReturnValue;
 #if WITH_METADATA
-		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Data_MetaData[];
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Arg_MetaData[];
 #endif
-		static const UE4CodeGen_Private::FStrPropertyParams NewProp_Data;
+		static const UE4CodeGen_Private::FStrPropertyParams NewProp_Arg;
 #if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_Function_MetaData[];
 #endif
@@ -105,11 +105,11 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 	};
 	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_ReturnValue = { "ReturnValue", nullptr, (EPropertyFlags)0x0010000000000580, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(PyLinkGameMode_eventCallPython_Parms, ReturnValue), METADATA_PARAMS(nullptr, 0) };
 #if WITH_METADATA
-	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Data_MetaData[] = {
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Arg_MetaData[] = {
 		{ "NativeConst", "" },
 	};
 #endif
-	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Data = { "Data", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(PyLinkGameMode_eventCallPython_Parms, Data), METADATA_PARAMS(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Data_MetaData, UE_ARRAY_COUNT(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Data_MetaData)) };
+	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Arg = { "Arg", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(PyLinkGameMode_eventCallPython_Parms, Arg), METADATA_PARAMS(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Arg_MetaData, UE_ARRAY_COUNT(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Arg_MetaData)) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Function_MetaData[] = {
 		{ "NativeConst", "" },
@@ -118,11 +118,12 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Function = { "Function", nullptr, (EPropertyFlags)0x0010000000000080, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(PyLinkGameMode_eventCallPython_Parms, Function), METADATA_PARAMS(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Function_MetaData, UE_ARRAY_COUNT(Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Function_MetaData)) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::PropPointers[] = {
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_ReturnValue,
-		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Data,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Arg,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::NewProp_Function,
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UFunction_APyLinkGameMode_CallPython_Statics::Function_MetaDataParams[] = {
+		{ "Category", "PyLink" },
 		{ "ModuleRelativePath", "Public/PyLinkGameMode.h" },
 	};
 #endif
@@ -168,7 +169,7 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 		(UObject* (*)())Z_Construct_UPackage__Script_UePyLink,
 	};
 	const FClassFunctionLinkInfo Z_Construct_UClass_APyLinkGameMode_Statics::FuncInfo[] = {
-		{ &Z_Construct_UFunction_APyLinkGameMode_CallPython, "CallPython" }, // 2460886952
+		{ &Z_Construct_UFunction_APyLinkGameMode_CallPython, "CallPython" }, // 1381564826
 		{ &Z_Construct_UDelegateFunction_APyLinkGameMode_PyBroadcast__DelegateSignature, "PyBroadcast__DelegateSignature" }, // 2711443026
 	};
 #if WITH_METADATA
@@ -183,19 +184,24 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModulePath_MetaData[] = {
 		{ "Category", "PyLinkGameMode" },
+		{ "Comment", "// Path to module, relative to Content directory.\n" },
 		{ "ModuleRelativePath", "Public/PyLinkGameMode.h" },
+		{ "ToolTip", "Path to module, relative to Content directory." },
 	};
 #endif
 	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModulePath = { "ModulePath", nullptr, (EPropertyFlags)0x0010000000000005, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(APyLinkGameMode, ModulePath), METADATA_PARAMS(Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModulePath_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModulePath_MetaData)) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModuleName_MetaData[] = {
 		{ "Category", "PyLinkGameMode" },
+		{ "Comment", "// Name of Python module to load.  E.g., 'mymodule'\n" },
 		{ "ModuleRelativePath", "Public/PyLinkGameMode.h" },
+		{ "ToolTip", "Name of Python module to load.  E.g., 'mymodule'" },
 	};
 #endif
 	const UE4CodeGen_Private::FStrPropertyParams Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModuleName = { "ModuleName", nullptr, (EPropertyFlags)0x0010000000000005, UE4CodeGen_Private::EPropertyGenFlags::Str, RF_Public|RF_Transient|RF_MarkAsNative, 1, STRUCT_OFFSET(APyLinkGameMode, ModuleName), METADATA_PARAMS(Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModuleName_MetaData, UE_ARRAY_COUNT(Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_ModuleName_MetaData)) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_APyLinkGameMode_Statics::NewProp_OnPyBroadcast_MetaData[] = {
+		{ "Category", "PyLink" },
 		{ "ModuleRelativePath", "Public/PyLinkGameMode.h" },
 	};
 #endif
@@ -232,7 +238,7 @@ void EmptyLinkFunctionForGeneratedCodePyLinkGameMode() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(APyLinkGameMode, 2805397924);
+	IMPLEMENT_CLASS(APyLinkGameMode, 3427896941);
 	template<> UEPYLINK_API UClass* StaticClass<APyLinkGameMode>()
 	{
 		return APyLinkGameMode::StaticClass();

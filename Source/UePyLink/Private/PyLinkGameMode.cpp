@@ -1,10 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PyLinkGameMode.h"
 #include "PyLink.h"
-#include <include/Python.h>
-#include "Engine/Engine.h"
-#include "Runtime/Core/Public/Misc/Paths.h"
+#include <Engine/Engine.h>
 #include <string>
+
+const char *to_char(FString fstr)
+{
+	return TCHAR_TO_UTF8(*fstr);
+}
 
 void APyLinkGameMode::_broadcast(const FString &Name, const FString &Data)
 {
@@ -13,12 +16,17 @@ void APyLinkGameMode::_broadcast(const FString &Name, const FString &Data)
 
 void APyLinkGameMode::_setpaths()
 {
-	// const FString pluginbasedir = IPluginManager::Get().FindPlugin(TEXT("UePyLink"))->GetBaseDir();
-	/*
-	Needs type conversion
-	Py_SetProgramName(_convert to wchar_t_ pluginbasedir + L"/Binaries/Win64/Python/python.exe");
-	Py_SetPath(-add python zip path or home path- -add game Content/Scripts);
-	*/
+	const FString basedir = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("UePyLink"))->GetBaseDir());
+	const FString contentdir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+
+	FString moduledir = contentdir + (ModulePath.IsEmpty() ? "" : ModulePath);
+
+	FString pyhome = basedir + "/Source/ThirdParty/Python";
+	FString pypath = pyhome + "/Lib;" + pyhome + "/DLLs;" + moduledir;
+
+	UE_LOG(LogLoad, Warning, TEXT("Pypath is %Ls"), *pypath);
+	Py_SetProgramName(*(pyhome + "/python.exe"));
+	Py_SetPath(*pypath);
 }
 
 FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
@@ -31,7 +39,7 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 
 		if (pFunc && PyCallable_Check(pFunc))
 		{
-			PyObject *pReturn = PyObject_CallFunctionObjArgs(pFunc, PyUnicode_FromString(Arg.c_str()), NULL);
+			PyObject *pReturn = PyObject_CallFunctionObjArgs(pFunc, PyUnicode_FromString(TCHAR_TO_UTF8(*Arg)), NULL);
 
 			if (pReturn)
 			{
@@ -53,10 +61,12 @@ void APyLinkGameMode::BeginPlay()
 
 	if (*ModuleName && !Py_IsInitialized())
 	{
-		// Need to set paths somewhere
-		OnPyCall.BindUObject(this, &APyLinkGameMode::_broadcast);
 
-		// Need to convert ModuleName to string
+		OnPyCall.BindUObject(this, &APyLinkGameMode::_broadcast);
+		_setpaths();
+
 		pModule = pInstance.StartPython(string(TCHAR_TO_UTF8(*ModuleName)));
+		UE_LOG(LogLoad, Warning, TEXT("Path is %Ls"), Py_GetPath());
+		UE_LOG(LogLoad, Warning, TEXT("Program is %Ls"), Py_GetProgramName());
 	};
 }
