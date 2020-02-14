@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PyLinkGameMode.h"
-#include "PyLink.h"
-#include <Engine/Engine.h>
+#include "Misc/Paths.h"
 #include <string>
 
 const char *to_char(FString fstr)
@@ -9,24 +8,65 @@ const char *to_char(FString fstr)
 	return TCHAR_TO_UTF8(*fstr);
 }
 
-void APyLinkGameMode::_broadcast(const FString &Name, const FString &Data)
+void APyLinkGameMode::PyBroadcast(const FString &Name, const FString &Data)
 {
 	OnPyBroadcast.Broadcast(Name, Data);
 }
 
-void APyLinkGameMode::_setpaths()
+bool APyLinkGameMode::IsValidConfig()
 {
 	const FString basedir = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("UePyLink"))->GetBaseDir());
 	const FString contentdir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
 
-	FString moduledir = contentdir + (ModulePath.IsEmpty() ? "" : ModulePath);
+	const FString moduledir = contentdir + (ModulePath.IsEmpty() ? "" : ModulePath);
+	const FString pyhome = basedir + "/Binaries/Win64/Python";
 
-	FString pyhome = basedir + "/Source/ThirdParty/Python";
-	FString pypath = pyhome + "/Lib;" + pyhome + "/DLLs;" + moduledir;
+	const FString progname = pyhome + "/python.exe";
 
-	UE_LOG(LogLoad, Warning, TEXT("Pypath is %Ls"), *pypath);
-	Py_SetProgramName(*(pyhome + "/python.exe"));
-	Py_SetPath(*pypath);
+	bool _valid = false;
+	FString pypath;
+
+	if (!FPaths::FileExists(progname))
+	{
+		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Could not find Program %Ls."), *progname);
+		return false;
+	}
+
+	if (!FPaths::DirectoryExists(moduledir))
+	{
+		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Could not find module path %Ls."), *moduledir);
+		return false;
+	}
+
+	if (FPaths::DirectoryExists(pyhome + "/Lib") && FPaths::DirectoryExists(pyhome + "/DLLs"))
+	{
+		pypath = pyhome + "/Lib;" + pyhome + "/DLLs;";
+		_valid = true;
+	}
+	else
+	{
+		for (int32 i = MAX_VERSION; i >= MIN_VERSION; i--)
+		{
+			if (FPaths::FileExists(pyhome + "/python3" + FString::FromInt(i) + ".zip"))
+			{
+				pypath = pyhome + "/python3" + FString::FromInt(i) + ".zip;";
+				_valid = true;
+			}
+		}
+	}
+
+	if (_valid)
+	{
+		Py_SetProgramName(*progname);
+		pypath += moduledir;
+		Py_SetPath(*pypath);
+
+		return true;
+	}
+
+	UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: No libraries in pyhome path %Ls."), *pyhome);
+
+	return false;
 }
 
 FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
@@ -41,15 +81,19 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 		{
 			PyObject *pReturn = PyObject_CallFunctionObjArgs(pFunc, PyUnicode_FromString(TCHAR_TO_UTF8(*Arg)), NULL);
 
-			if (pReturn)
+			if (pReturn && pReturn != Py_None)
 			{
 				returnVal = FString(PyUnicode_AsUTF8(PyObject_Str(pReturn)));
 			}
 		}
+		else
+		{
+			UE_LOG(LogLoad, Warning, TEXT("Python: Could not call function %Ls."), *Function);
+		}
 	}
 	else
 	{
-		printf("Error: No module loaded.");
+		UE_LOG(LogLoad, Warning, TEXT("Python: Could not call function %Ls: No module loaded."), *Function);
 	}
 
 	return returnVal;
@@ -57,16 +101,35 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 
 void APyLinkGameMode::BeginPlay()
 {
-	Super::BeginPlay();
-
-	if (*ModuleName && !Py_IsInitialized())
+	if (!ModuleName.IsEmpty())
 	{
+		if (!Py_IsInitialized())
+		{
+			OnPyCall.BindUObject(this, &APyLinkGameMode::PyBroadcast);
+			if (IsValidConfig())
+			{
+				pModule = pInstance.StartPython(string(TCHAR_TO_UTF8(*ModuleName)));
+			}
 
-		OnPyCall.BindUObject(this, &APyLinkGameMode::_broadcast);
-		_setpaths();
-
-		pModule = pInstance.StartPython(string(TCHAR_TO_UTF8(*ModuleName)));
-		UE_LOG(LogLoad, Warning, TEXT("Path is %Ls"), Py_GetPath());
-		UE_LOG(LogLoad, Warning, TEXT("Program is %Ls"), Py_GetProgramName());
+			if (pModule)
+			{
+				UE_LOG(LogLoad, Display, TEXT("Python: Using interpreter at %Ls"), Py_GetProgramName());
+				UE_LOG(LogLoad, Display, TEXT("Python: Path is %Ls"), Py_GetPath());
+			}
+			else
+			{
+				UE_LOG(LogLoad, Warning, TEXT("Python: Could not load module %Ls."), *ModuleName);
+			}
+		}
+		else
+		{
+			UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Already initialized."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: No module specified."));
 	};
+
+	Super::BeginPlay();
 }

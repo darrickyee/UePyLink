@@ -1,9 +1,4 @@
 #include "PyLink.h"
-#if DEV
-#else
-#include "CoreMinimal.h"
-
-#endif
 
 PyMODINIT_FUNC
 PyInit_ue_pylink(void)

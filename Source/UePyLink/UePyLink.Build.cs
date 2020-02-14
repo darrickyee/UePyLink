@@ -2,13 +2,16 @@
 
 using UnrealBuildTool;
 
+int MIN_VERSION = 5;
+int MAX_VERSION = 9;
+
 public class UePyLink : ModuleRules
 {
     public UePyLink(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        string PythonDir = System.IO.Path.Combine(ModuleDirectory, "..", "ThirdParty", "Python");
+        string PythonDir = System.IO.Path.GetFullPath(System.IO.Path.Combine(ModuleDirectory, "..\\..\\Binaries\\Win64\\Python"));
 
         PublicIncludePaths.AddRange(
             new string[] {
@@ -17,7 +20,15 @@ public class UePyLink : ModuleRules
             }
             );
 
-        PublicLibraryPaths.Add(System.IO.Path.Combine(PythonDir, "libs"));
+        for (int i = MAX_VERSION; i >= MIN_VERSION; i--)
+        {
+            string libFile = System.IO.Path.Combine(PythonDir, string.Format("libs\\python3{0}.lib", i));
+            if (System.IO.File.Exists(libFile))
+            {
+                PublicAdditionalLibraries.Add(libFile);
+                System.Console.WriteLine(string.Format("[UePyLink] Using lib at {0}", libFile));
+            }
+        }
 
         PrivateIncludePaths.AddRange(
             new string[] {

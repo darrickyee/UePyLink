@@ -1,3 +1,4 @@
+.vscode
 *.pdb
 *.dll
-ThirdParty
+Binaries/Win64/Python/*

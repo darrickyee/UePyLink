@@ -2,9 +2,11 @@
 #include "CoreMinimal.h"
 #include "PyLink.h"
 #include "Interfaces/IPluginManager.h"
-#include "Misc/Paths.h"
 #include "GameFramework/GameModeBase.h"
 #include "PyLinkGameMode.generated.h"
+
+#define MIN_VERSION 5
+#define MAX_VERSION 9
 
 /**
  * 
@@ -17,11 +19,13 @@ class UEPYLINK_API APyLinkGameMode : public AGameModeBase
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FString &, Name, const FString &, Data);
 
+	// Called when ue_pylink.broadcast(Name, Data) is called in Python.
 	UPROPERTY(BlueprintAssignable, Category = "PyLink")
 	FPyBroadcast OnPyBroadcast;
 
+	// Call a Python function with a single str argument.
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
-	FString CallPython(const FString &Function, const FString &Arg);
+	FString CallPython(const FString &Function, const FString &Arg = "");
 
 	// Name of Python module to load.  E.g., 'mymodule'
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -34,9 +38,9 @@ public:
 	virtual void BeginPlay() override;
 
 private:
-	PyObject *pModule;
+	PyObject *pModule = 0;
 	CPyInstance pInstance;
 
-	void _broadcast(const FString &Name, const FString &Data);
-	void _setpaths();
+	void PyBroadcast(const FString &Name, const FString &Data);
+	bool IsValidConfig();
 };
