@@ -1,5 +1,7 @@
 .vscode
 *.pdb
 *.dll
-Binaries/Win64/Python/*
+Intermediate
+Binaries
+!UE4Editor.modules
 !README*
