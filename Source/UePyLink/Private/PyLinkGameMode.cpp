@@ -101,6 +101,8 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 
 void APyLinkGameMode::BeginPlay()
 {
+	Super::BeginPlay();
+
 	if (!ModuleName.IsEmpty())
 	{
 		if (!Py_IsInitialized())
@@ -108,7 +110,7 @@ void APyLinkGameMode::BeginPlay()
 			OnPyCall.BindUObject(this, &APyLinkGameMode::PyBroadcast);
 			if (IsValidConfig())
 			{
-				pModule = pInstance.StartPython(string(TCHAR_TO_UTF8(*ModuleName)));
+				pModule = pInstance.StartPython(std::string(TCHAR_TO_UTF8(*ModuleName)));
 			}
 
 			if (pModule)
@@ -130,6 +132,4 @@ void APyLinkGameMode::BeginPlay()
 	{
 		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: No module specified."));
 	};
-
-	Super::BeginPlay();
 }
