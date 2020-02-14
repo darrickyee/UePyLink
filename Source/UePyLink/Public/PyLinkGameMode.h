@@ -17,7 +17,7 @@ class UEPYLINK_API APyLinkGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FString &, Name, const FString &, Data);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FName &, Name, const FString &, Data);
 
 	// Called when ue_pylink.broadcast(Name, Data) is called in Python.
 	UPROPERTY(BlueprintAssignable, Category = "PyLink")

@@ -10,7 +10,7 @@ const char *to_char(FString fstr)
 
 void APyLinkGameMode::PyBroadcast(const FString &Name, const FString &Data)
 {
-	OnPyBroadcast.Broadcast(Name, Data);
+	OnPyBroadcast.Broadcast(FName(*Name), Data);
 }
 
 bool APyLinkGameMode::IsValidConfig()
