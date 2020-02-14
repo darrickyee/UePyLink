@@ -40,7 +40,7 @@ bool APyLinkGameMode::IsValidConfig()
 
 	if (FPaths::DirectoryExists(pyhome + "/Lib") && FPaths::DirectoryExists(pyhome + "/DLLs"))
 	{
-		pypath = pyhome + "/Lib;" + pyhome + "/DLLs;";
+		pypath = pyhome + "/Lib;" + pyhome + "/Lib/site-packages;" + pyhome + "/DLLs;";
 		_valid = true;
 	}
 	else

@@ -2,3 +2,4 @@
 *.pdb
 *.dll
 Binaries/Win64/Python/*
+!README*
