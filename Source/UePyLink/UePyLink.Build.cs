@@ -22,7 +22,7 @@ public class UePyLink : ModuleRules
 		}
 		else
 		{
-			throw new System.Exception("[UePyLink] Error: Could not find include director:y '{0}'", pyInclude);
+			throw new System.Exception(string.Format("[UePyLink] Error: Could not find include directory: '{0}'", pyInclude));
 		}
 
         // Libs path
