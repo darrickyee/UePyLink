@@ -28,13 +28,13 @@ bool APyLinkGameMode::IsValidConfig()
 
 	if (!FPaths::FileExists(progname))
 	{
-		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Could not find Program %Ls."), *progname);
+		UE_LOG(LogLoad, Warning, TEXT("PyLink: Initialization failed: Could not find Program %Ls."), *progname);
 		return false;
 	}
 
 	if (!FPaths::DirectoryExists(moduledir))
 	{
-		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Could not find module path %Ls."), *moduledir);
+		UE_LOG(LogLoad, Warning, TEXT("PyLink: Initialization failed: Could not find module path %Ls."), *moduledir);
 		return false;
 	}
 
@@ -64,7 +64,7 @@ bool APyLinkGameMode::IsValidConfig()
 		return true;
 	}
 
-	UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: No libraries in pyhome path %Ls."), *pyhome);
+	UE_LOG(LogLoad, Warning, TEXT("PyLink: Initialization failed: No libraries in pyhome path %Ls."), *pyhome);
 
 	return false;
 }
@@ -88,12 +88,12 @@ FString APyLinkGameMode::CallPython(const FString &Function, const FString &Arg)
 		}
 		else
 		{
-			UE_LOG(LogLoad, Warning, TEXT("Python: Could not call function %Ls."), *Function);
+			UE_LOG(LogLoad, Warning, TEXT("PyLink: Could not call function %Ls."), *Function);
 		}
 	}
 	else
 	{
-		UE_LOG(LogLoad, Warning, TEXT("Python: Could not call function %Ls: No module loaded."), *Function);
+		UE_LOG(LogLoad, Warning, TEXT("PyLink: Could not call function %Ls: No module loaded."), *Function);
 	}
 
 	return returnVal;
@@ -115,21 +115,21 @@ void APyLinkGameMode::BeginPlay()
 
 			if (pModule)
 			{
-				UE_LOG(LogLoad, Display, TEXT("Python: Using interpreter at %Ls"), Py_GetProgramName());
-				UE_LOG(LogLoad, Display, TEXT("Python: Path is %Ls"), Py_GetPath());
+				UE_LOG(LogLoad, Display, TEXT("PyLink: Using interpreter at %Ls"), Py_GetProgramName());
+				UE_LOG(LogLoad, Display, TEXT("PyLink: Path is %Ls"), Py_GetPath());
 			}
 			else
 			{
-				UE_LOG(LogLoad, Warning, TEXT("Python: Could not load module %Ls."), *ModuleName);
+				UE_LOG(LogLoad, Warning, TEXT("PyLink: Could not load module %Ls."), *ModuleName);
 			}
 		}
 		else
 		{
-			UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: Already initialized."));
+			UE_LOG(LogLoad, Warning, TEXT("PyLink: Initialization failed: Already initialized."));
 		}
 	}
 	else
 	{
-		UE_LOG(LogLoad, Warning, TEXT("Python: Initialization failed: No module specified."));
+		UE_LOG(LogLoad, Warning, TEXT("PyLink: Initialization failed: No module specified."));
 	};
 }

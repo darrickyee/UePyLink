@@ -11,7 +11,7 @@ static PyObject *ue_pylink_broadcast(PyObject *self, PyObject *pArgs)
 	{
 		const char *nameArg = PyUnicode_AsUTF8(PyObject_Str(arg1));
 		const char *dataArg = (arg2 == Py_None) ? "" : PyUnicode_AsUTF8(PyObject_Str(arg2));
-		printf("Received broadcast with Name: %s, Data: %s", nameArg, dataArg);
+		printf("PyLink: Received broadcast with Name: %s, Data: %s", nameArg, dataArg);
 	}
 
 	Py_RETURN_NONE;
