@@ -16,6 +16,18 @@ bool UPyLinkSubsystem::LoadModule(const FString &ModuleName, const FString &Modu
 	return IsValidConfig(ModulePath);
 }
 
+const FString UPyLinkSubsystem::GetModulePath()
+{
+	const FString contentdir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+	return contentdir + _ModulePath;
+}
+
+void UPyLinkSubsystem::SetModulePath(const FString &newPath)
+{
+	const FString contentdir = FPaths::ConvertRelativePathToFull(FPaths::ProjectContentDir());
+	_ModulePath = newPath.Contains(contentdir) ? newPath : contentdir + newPath;
+}
+
 bool UPyLinkSubsystem::IsValidConfig(const FString &ModulePath)
 {
 	const FString basedir = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("UePyLink"))->GetBaseDir());

@@ -110,7 +110,7 @@ void APyLinkGameMode::BeginPlay()
 			OnPyCall.BindUObject(this, &APyLinkGameMode::PyBroadcast);
 			if (IsValidConfig())
 			{
-				pModule = pInstance.StartPython(std::string(TCHAR_TO_UTF8(*ModuleName)));
+				pModule = pInstance.ImportModule(std::string(TCHAR_TO_UTF8(*ModuleName)));
 			}
 
 			if (pModule)

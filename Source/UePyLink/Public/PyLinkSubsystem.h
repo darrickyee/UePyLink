@@ -8,7 +8,7 @@
 #include "PyLinkSubsystem.generated.h"
 
 #define MIN_VERSION 5
-#define MAX_VERSION 9
+#define MAX_VERSION 8
 
 /**
  * 
@@ -25,9 +25,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool LoadModule(const FString &ModuleName, const FString &ModulePath = "Scripts");
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	bool IsValidConfig(const FString &ModulePath);
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	const FString GetModulePath();
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	void SetModulePath(const FString &newPath = "Scripts");
 
 private:
 	PyObject *pModule = NULL;
+	FString _ModulePath = "Scripts";
 };

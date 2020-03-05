@@ -48,37 +48,42 @@ PyInit_ue_pylink(void)
 	return PyModule_Create(&moddef);
 }
 
-// Python manager
-CPyInstance::CPyInstance() : pModule{0}, ModuleName{""}
+bool CPyInstance::StartPython()
 {
+	if (!Py_IsInitialized())
+	{
+		PyImport_AppendInittab("ue_pylink", &PyInit_ue_pylink);
+		Py_Initialize();
+	}
+
+	return Py_IsInitialized();
 }
 
-PyObject *CPyInstance::StartPython(std::string module_name)
+PyObject *CPyInstance::ImportModule(std::string module_name)
 {
 	if (!module_name.empty())
 	{
-		ModuleName = module_name;
-	}
-
-	if (!ModuleName.empty())
-	{
 		if (!Py_IsInitialized())
 		{
-			PyImport_AppendInittab("ue_pylink", &PyInit_ue_pylink);
-			Py_Initialize();
+			StartPython();
+		}
 
-			if (Py_IsInitialized() && !pModule)
-			{
-				pModule = PyImport_ImportModule(ModuleName.c_str());
-				return pModule;
-			}
+		if (Py_IsInitialized())
+		{
+			PyObject *pModule = PyImport_ImportModule(module_name.c_str());
+			return pModule;
 		}
 	}
 
 	return NULL;
 }
 
-CPyInstance::~CPyInstance()
+void CPyInstance::StopPython()
 {
 	Py_Finalize();
+}
+
+CPyInstance::~CPyInstance()
+{
+	StopPython();
 }

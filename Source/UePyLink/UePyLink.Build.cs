@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class UePyLink : ModuleRules
 {
 	int MIN_VERSION = 5;
-	int MAX_VERSION = 9;
+	int MAX_VERSION = 8;
 	public UePyLink(ReadOnlyTargetRules Target): base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;

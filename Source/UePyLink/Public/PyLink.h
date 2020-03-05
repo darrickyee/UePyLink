@@ -20,12 +20,11 @@ PyInit_ue_pylink(void);
 class CPyInstance
 {
 public:
-	CPyInstance();
 	~CPyInstance();
 
-	PyObject *StartPython(std::string module_name = "");
+	bool StartPython();
 
-private:
-	PyObject *pModule;
-	std::string ModuleName;
+	PyObject *ImportModule(std::string module_name = "");
+
+	void StopPython();
 };

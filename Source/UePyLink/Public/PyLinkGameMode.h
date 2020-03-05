@@ -6,7 +6,7 @@
 #include "PyLinkGameMode.generated.h"
 
 #define MIN_VERSION 5
-#define MAX_VERSION 9
+#define MAX_VERSION 8
 
 /**
  * 
