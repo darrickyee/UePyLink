@@ -3,6 +3,7 @@
 #pragma once
 
 #include <Python.h>
+#include "PyLink.h"
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PyLinkSubsystem.generated.h"
@@ -13,28 +14,51 @@
 /**
  * 
  */
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FName &, Name, const FString &, Data);
+
 UCLASS()
 class UEPYLINK_API UPyLinkSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable)
-	FString DoSomething();
+	UPyLinkSubsystem();
 
-	UFUNCTION(BlueprintCallable)
-	bool LoadModule(const FString &ModuleName, const FString &ModulePath = "Scripts");
-
-	UFUNCTION(BlueprintCallable, Category = "PyLink")
-	bool IsValidConfig(const FString &ModulePath);
+	// Called when ue_pylink.broadcast(Name, Data) is called in Python.
+	UPROPERTY(BlueprintAssignable, Category = "PyLink")
+	FPyBroadcast OnPyBroadcast;
 
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
-	const FString GetModulePath();
+	bool SetupPython();
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	bool StartPython();
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	void StopPython();
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	bool ImportModule(const FString &ModuleName);
+
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	const FString GetModulePath(const bool absolute = true);
 
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	void SetModulePath(const FString &newPath = "Scripts");
 
+	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	FString CallPython(const FString &Function, const FString &Arg);
+
 private:
+	void PyBroadcast(const FString &Name, const FString &Data);
+
 	PyObject *pModule = NULL;
-	FString _ModulePath = "Scripts";
+
+	CPyInstance pyInstance;
+
+	FString basePath;
+	FString contentPath;
+	FString pyHome;
+	FString pyModulePath = "Scripts";
 };
