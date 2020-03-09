@@ -97,6 +97,7 @@ bool UPyLinkSubsystem::ImportModule(const FString &ModuleName)
 
 		if (pModule)
 		{
+			pModules.AddUnique(ModuleName);
 			UE_LOG(LogLoad, Display, TEXT("PyLink: Imported module '%Ls'."), *ModuleName);
 			return true;
 		}
@@ -154,4 +155,16 @@ FString UPyLinkSubsystem::CallPython(const FString &Function, const FString &Arg
 void UPyLinkSubsystem::PyBroadcast(const FString &Name, const FString &Data)
 {
 	OnPyBroadcast.Broadcast(FName(*Name), Data);
+}
+
+PyObject *UPyLinkSubsystem::GetModuleByName(const FString &ModuleName)
+{
+	PyObject *pModuleName = PyUnicode_FromString(TCHAR_TO_UTF8(*ModuleName));
+	PyObject *pMod = PyImport_GetModule(pModuleName);
+}
+
+const TArray<FString> UPyLinkSubsystem::GetImportedModules()
+{
+	const TArray<FString> rv = pModules;
+	return rv;
 }

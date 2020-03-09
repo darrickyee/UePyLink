@@ -29,6 +29,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "PyLink")
 	FPyBroadcast OnPyBroadcast;
 
+	UFUNCTION(BlueprintCallable)
+	const TArray<FString> GetImportedModules();
+
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	bool SetupPython();
 
@@ -50,10 +53,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	FString CallPython(const FString &Function, const FString &Arg);
 
+	PyObject *GetModuleByName(const FString &ModuleName);
+
 private:
 	void PyBroadcast(const FString &Name, const FString &Data);
 
 	PyObject *pModule = NULL;
+
+	TArray<FString> pModules;
 
 	CPyInstance pyInstance;
 
