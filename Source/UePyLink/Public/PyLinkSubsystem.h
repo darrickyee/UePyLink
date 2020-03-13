@@ -17,6 +17,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FPyBroadcast, const FName &, Name, const FString &, Data);
 
+DECLARE_LOG_CATEGORY_EXTERN(LogPyLink, Log, All);
+
 UCLASS()
 class UEPYLINK_API UPyLinkSubsystem : public UGameInstanceSubsystem
 {
@@ -29,7 +31,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "PyLink")
 	FPyBroadcast OnPyBroadcast;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure, Category = "PyLink")
 	const TArray<FString> GetImportedModules();
 
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
@@ -44,19 +46,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	bool ImportModule(const FString &ModuleName);
 
-	UFUNCTION(BlueprintCallable, Category = "PyLink")
+	UFUNCTION(BlueprintPure, Category = "PyLink")
 	const FString GetModulePath(const bool absolute = true);
 
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
 	void SetModulePath(const FString &newPath = "Scripts");
 
 	UFUNCTION(BlueprintCallable, Category = "PyLink")
-	FString CallPython(const FString &Function, const FString &Arg);
-
-	PyObject *GetModuleByName(const FString &ModuleName);
+	const FString CallPython(const FString &Function, const FString &Arg, const FString &ModuleName = "");
 
 private:
+	PyObject *GetModuleByName(const FString &ModuleName);
 	void PyBroadcast(const FString &Name, const FString &Data);
+	void LogError();
 
 	PyObject *pModule = NULL;
 
