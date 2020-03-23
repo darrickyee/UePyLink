@@ -62,6 +62,7 @@ private:
 
 	PyObject *pModule = NULL;
 
+	UPROPERTY()
 	TArray<FString> pModules;
 
 	CPyInstance pyInstance;
