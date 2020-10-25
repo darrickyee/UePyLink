@@ -20,11 +20,11 @@ static PyObject *ue_pylink_broadcast(PyObject *self, PyObject *pArgs)
 #else
 static PyObject *ue_pylink_broadcast(PyObject *self, PyObject *pArgs)
 {
-	PyObject *arg1;
+	PyObject *arg1 = Py_None;
 	PyObject *arg2 = Py_None;
 	if (PyArg_ParseTuple(pArgs, "O|O", &arg1, &arg2))
 	{
-		const char *nameArg = PyUnicode_AsUTF8(PyObject_Str(arg1));
+		const char *nameArg = (arg1 == Py_None) ? "" : PyUnicode_AsUTF8(PyObject_Str(arg1));
 		const char *dataArg = (arg2 == Py_None) ? "" : PyUnicode_AsUTF8(PyObject_Str(arg2));
 		OnPyCall.ExecuteIfBound(FString(nameArg), FString(dataArg));
 	}
@@ -34,9 +34,22 @@ static PyObject *ue_pylink_broadcast(PyObject *self, PyObject *pArgs)
 
 #endif // !DEV
 
+static PyObject *ue_pylink_log(PyObject *self, PyObject *pMsg)
+{
+	PyObject *arg = Py_None;
+	if (PyArg_ParseTuple(pMsg, "O", &arg))
+	{
+		const char *msgArg = (arg == Py_None) ? "" : PyUnicode_AsUTF8(PyObject_Str(arg));
+		OnPyLog.ExecuteIfBound(FString(msgArg));
+	}
+
+	Py_RETURN_NONE;
+};
+
 // Expose functions & module to Python
 static struct PyMethodDef methods[] = {
-	{"broadcast", ue_pylink_broadcast, METH_VARARGS, "Broadcast data to UE4"},
+	{"dispatch", ue_pylink_broadcast, METH_VARARGS, "Dispatch event to UE4"},
+	{"log", ue_pylink_log, METH_VARARGS, "Log event to UE4 console"},
 	{NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef moddef = {

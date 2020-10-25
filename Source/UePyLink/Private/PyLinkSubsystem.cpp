@@ -14,7 +14,8 @@ UPyLinkSubsystem::UPyLinkSubsystem()
 
 	pyHome = basePath + "/Binaries/Win64/Python";
 
-	OnPyCall.BindUObject(this, &UPyLinkSubsystem::PyBroadcast);
+	OnPyCall.BindUObject(this, &UPyLinkSubsystem::PyDispatch);
+	OnPyLog.BindUObject(this, &UPyLinkSubsystem::PyLog);
 }
 
 bool UPyLinkSubsystem::SetupPython()
@@ -55,10 +56,14 @@ bool UPyLinkSubsystem::SetupPython()
 	}
 
 	// Check module directory
-	pyPath += GetModulePath() + ";";
-	if (!FPaths::DirectoryExists(GetModulePath()))
+	const FString modPath = GetModulePath(true);
+	if (FPaths::DirectoryExists(modPath))
 	{
-		UE_LOG(LogPyLink, Warning, TEXT("Could not find module path %Ls.  Modules may not load correctly."), *(GetModulePath()));
+		pyPath += modPath + ";";
+	}
+	else
+	{
+		UE_LOG(LogPyLink, Warning, TEXT("Could not find module path %Ls.  Modules may not load correctly."), *modPath);
 	}
 
 	if (_valid)
@@ -92,11 +97,6 @@ bool UPyLinkSubsystem::ImportModule(const FString &ModuleName)
 			return false;
 		}
 
-		// if (!pModule)
-		// {
-		// 	pModule = pyInstance.ImportModule(std::string(TCHAR_TO_UTF8(*ModuleName)));
-		// }
-
 		PyObject *mod = pyInstance.ImportModule(std::string(TCHAR_TO_UTF8(*ModuleName)));
 
 		if (mod)
@@ -107,8 +107,6 @@ bool UPyLinkSubsystem::ImportModule(const FString &ModuleName)
 		}
 
 		LogError();
-
-		// UE_LOG(LogPyLink, Warning, TEXT("ImportModule failed: Error loading module '%Ls'."), *ModuleName);
 	}
 	return false;
 }
@@ -125,7 +123,13 @@ const FString UPyLinkSubsystem::GetModulePath(const bool absolute)
 
 void UPyLinkSubsystem::SetModulePath(const FString &newPath)
 {
-	pyModulePath = newPath.Contains(contentPath) ? newPath : contentPath + newPath;
+	pyModulePath = newPath;
+	const FString modPath = GetModulePath(true);
+	UE_LOG(LogPyLink, Display, TEXT("Module path set to '%Ls'."), *modPath);
+	if (!FPaths::DirectoryExists(modPath))
+	{
+		UE_LOG(LogPyLink, Warning, TEXT("Module path could not be found.  Modules may not load correctly."));
+	}
 }
 
 const FString UPyLinkSubsystem::CallPython(const FString &Function, const FString &Arg, const FString &ModuleName)
@@ -178,9 +182,14 @@ const FString UPyLinkSubsystem::CallPython(const FString &Function, const FStrin
 	return returnVal;
 }
 
-void UPyLinkSubsystem::PyBroadcast(const FString &Name, const FString &Data)
+void UPyLinkSubsystem::PyDispatch(const FString &Name, const FString &Data)
 {
-	OnPyBroadcast.Broadcast(FName(*Name), Data);
+	OnDispatch.Broadcast(FName(*Name), Data);
+}
+
+void UPyLinkSubsystem::PyLog(const FString &Message)
+{
+	UE_LOG(LogPyLink, Display, TEXT("[PyLog] %Ls"), *Message);
 }
 
 PyObject *UPyLinkSubsystem::GetModuleByName(const FString &ModuleName)
