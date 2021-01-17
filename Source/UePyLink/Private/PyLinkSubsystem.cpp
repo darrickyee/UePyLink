@@ -71,7 +71,9 @@ bool UPyLinkSubsystem::SetupPython()
 		Py_SetProgramName(*pyProgram);
 		Py_SetPath(*pyPath);
 
-		return true;
+		pyInstance = MakeShareable<CPyInstance>(new CPyInstance());
+
+		return pyInstance.IsValid();
 	}
 
 	return false;
@@ -79,9 +81,9 @@ bool UPyLinkSubsystem::SetupPython()
 
 bool UPyLinkSubsystem::StartPython()
 {
-	if (SetupPython())
+	if (SetupPython() && pyInstance.IsValid())
 	{
-		return pyInstance.StartPython();
+		return pyInstance->StartPython();
 	}
 
 	return false;
@@ -97,7 +99,7 @@ bool UPyLinkSubsystem::ImportModule(const FString &ModuleName)
 			return false;
 		}
 
-		PyObject *mod = pyInstance.ImportModule(std::string(TCHAR_TO_UTF8(*ModuleName)));
+		PyObject *mod = pyInstance.IsValid() ? pyInstance->ImportModule(std::string(TCHAR_TO_UTF8(*ModuleName))) : nullptr;
 
 		if (mod)
 		{
@@ -113,7 +115,8 @@ bool UPyLinkSubsystem::ImportModule(const FString &ModuleName)
 
 void UPyLinkSubsystem::StopPython()
 {
-	pyInstance.StopPython();
+	if (pyInstance.IsValid())
+		pyInstance->StopPython();
 }
 
 const FString UPyLinkSubsystem::GetModulePath(const bool absolute)
@@ -143,8 +146,7 @@ const FString UPyLinkSubsystem::CallPython(const FString &Function, const FStrin
 	}
 
 	const FString modname = ModuleName.IsEmpty() ? pModules[0] : ModuleName;
-	PyObject *mod = NULL;
-	mod = GetModuleByName(modname);
+	PyObject *mod = GetModuleByName(modname);
 
 	if (!mod)
 	{
@@ -197,6 +199,11 @@ PyObject *UPyLinkSubsystem::GetModuleByName(const FString &ModuleName)
 	PyObject *pModuleName = PyUnicode_FromString(TCHAR_TO_UTF8(*ModuleName));
 	PyObject *pMod = PyImport_GetModule(pModuleName);
 	return pMod;
+}
+
+void UPyLinkSubsystem::Deinitialize()
+{
+	StopPython();
 }
 
 const TArray<FString> UPyLinkSubsystem::GetImportedModules()

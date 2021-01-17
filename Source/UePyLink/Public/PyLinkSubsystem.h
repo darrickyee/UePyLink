@@ -26,6 +26,8 @@ class UEPYLINK_API UPyLinkSubsystem : public UGameInstanceSubsystem
 
 public:
 	UPyLinkSubsystem();
+	
+	virtual void Deinitialize() override;
 
 	// Called when ue_pylink.dispatch(Name, Data) is called in Python.
 	UPROPERTY(BlueprintAssignable, Category = "PyLink")
@@ -97,12 +99,10 @@ private:
 	void PyLog(const FString &Message);
 	void LogError();
 
-	PyObject *pModule = NULL;
-
 	UPROPERTY()
 	TArray<FString> pModules;
 
-	CPyInstance pyInstance;
+	TSharedPtr<CPyInstance> pyInstance;
 
 	FString basePath;
 	FString contentPath;
