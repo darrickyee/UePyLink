@@ -1,4 +1,6 @@
-def dispatch(name: str = None, data: str = None) -> None:
+from typing import Optional
+
+def dispatch(name: Optional[str] = None, data: Optional[str] = None) -> None:
     """Dispatches an event to Unreal by calling the OnDispatch event dispatcher.
 
     Args:
@@ -7,7 +9,7 @@ def dispatch(name: str = None, data: str = None) -> None:
     """
     ...
 
-def log(message: str = None) -> None:
+def log(message: Optional[str] = None) -> None:
     """Logs a message to the UE4 output console.
 
     Args:
