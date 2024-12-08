@@ -69,7 +69,7 @@ bool CPyInstance::StartPython()
 		Py_Initialize();
 	}
 
-	return Py_IsInitialized();
+	return static_cast<bool>(Py_IsInitialized());
 }
 
 PyObject *CPyInstance::ImportModule(std::string module_name)
